@@ -1,0 +1,41 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const last_posts = posts.slice(0, 3);
+---
+<style>
+  /* mouse over link */
+  a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px; 
+    text-decoration-thickness: 2px; 
+  }
+
+  /* selected link */
+  a:active {
+    text-decoration: underline;
+    text-underline-offset: 4px; 
+    text-decoration-thickness: 2px; 
+  }
+</style>
+
+
+<BaseLayout sideBarActiveItemID="home">
+  <div class="pb-12 mt-5">
+    <div class="text-5xl py-3 font-bold">Kunming Jiang (Benny)</div>
+    <div class="py-3 font-bold">kunmingj@andrew.cmu.edu</div>
+    <div class="py-3">
+      <text class="text-lg">
+        Hi there! I'm a PhD Student in the <a href="https://csd.cmu.edu/" target="_blank" class="bg-secondary">Computer Science Department</a>  of Carnegie Mellon University. My primary research interests are on compilers and SNARK systems, and some mishmash between the two. I'm passionate about, aside from my cat Floe, using anlyses on program structure and semantics to produce the most efficient and concise SNARK proofs. I'm co-advised by <a href="https://wahby.net/" target="_blank" class="bg-secondary">Riad Wahby</a> and <a href="https://mlfbrown.com/" target="_blank" class="bg-secondary">Fraser Brown</a>. Before that, I graduated from NYU with a BA in Computer Science and Mathematics, where I started my research career under the guidance of <a href="https://cs.nyu.edu/~mwalfish/" target="_blank" class="bg-secondary">Mike Walfish</a>.
+      </text>
+    </div>
+    <div class="py-3">
+      <text class="text-lg">
+        Besides school, I have also worked as an intern for Oracle and Scroll, on topics that may or may not relate to my research. If you want to learn more about me, checkout my <a href="/cv.pdf" target="_blank" class="bg-secondary">CV</a> and feel free to reach out to me!
+      </text>
+    </div>
+  </div>
+</BaseLayout>
