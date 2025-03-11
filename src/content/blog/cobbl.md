@@ -35,7 +35,7 @@ Facing the two approaches with completely opposite merits and drawbacks, we rais
 ### CoBBl: a block-based SNARK system
 To tackle the above issues, we present a new block-based SNARK system, CoBBl (**C**onstraints **o**ver **B**asic **Bl**ocks). Building a SNARK system is hard. Fortunately, we do not have to start from zero. Our starting point is CirC, a direct translator that can process, among other languages, a custom language called Z# specifically designed for SNARKs. CirC includes functionalities to parse a Z# program into a syntax tree, as well as turning a syntax tree into constraints. The goal of CoBBl is to expand on that syntax tree: divide it into blocks, specify and optimize each block, and express each block as individual syntax trees for CirC to convert them into constraints. Below, we show a simple example of CoBBl in action, converting a `find_min` program into constraints through three stages.
 
-![image info](./cobbl_framework.png)
+![image info](../../../public/cobbl_framework.png)
 
 #### Divide a program into basic blocks
 This is, in fact, a very straightforward process. Since a basic block cannot contain any control flow within it, CoBBl processes the program linearly, and whenever it encounters a start or an end to a branching statement, a loop, or a function call (i.e., a split or a merge on the program control flow graph), it initializes a new block.
