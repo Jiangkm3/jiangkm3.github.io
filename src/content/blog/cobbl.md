@@ -38,9 +38,11 @@ To tackle the above issues, we present a new block-based SNARK system, CoBBl (**
 ![image info](./cobbl_framework.png)
 
 #### Divide a program into basic blocks
-This is, in fact, a very straightforward process. Since a basic block cannot contain any control flow within it, CoBBl processes the program linearly, and whenever it encounters a start or an end to a branching statement, a loop, or a function call (i.e., a split or a merge on the program control flow graph), it initializes a new block.
+Since a basic block cannot contain any control flow within it, CoBBl processes the program linearly, and whenever it encounters a split or a merge on the program control flow graph (e.g. a start or an end to a branching statement, a loop, or a function call), it initializes a new block. After producing all the basic blocks, CoBBl also produces a round of "standard" compiler optimizations, including liveness analysis, dead code elimination, and inlining of all functions that only have one callsite.
 
 #### Minimize the number of blocks and optimize each block
 Blindly dividing a program into blocks based on control flow might not be the most efficient way for constraint generation. A common issue is that the size of the blocks are still too small. In the `find_min` example above, the combination of the while loop with the conditional statement produces three small but interconnected blocks, the size of which are too small for any block- or constraint-level optimization, and the large quantity of which results in blowups in $\mathcal{P}$ and $\mathcal{V}$ cost. The solution is for CoBBl to selectively merge smaller blocks into larger ones using existing flattening techniques (similar to the one used in direct translators). While these techniques allows CoBBl to express multiple blocks using a single sequence of instructions and conditional selects, just like direct translators, they incur extra cost for $\mathcal{P}$ on the merged blocks, like paying for both branches of a conditional statement. CoBBl captures this tradeoff in a user-defined parameter, `MAX_BLOCK_SIZE`, and the rest of the procedure is as follows:
-1. CoBBl estimates the number of constraints $\mathcal{C}_b$ for each block $b$. It then deduces $\mathcal{C}_{\text{max}}$, 
-2. 
+1. CoBBl estimates the number of constraints $|\mathcal{C}_b|$ for each block $b$. It then deduces $|\mathcal{C}_{\text{max}}|$, the maximum size allowed for a merged block, computed as the maximum between `MAX_BLOCK_SIZE` and $\max_b|\mathcal{C}_b|$.
+2. To merge blocks, CoBBl keeps track of $|\mathcal{M}_b|$, the estimated size of the merged block starting at $b$. In particular:
+    * If $b$ does not initiate a conditional jump, then CoBBl sets $|\mathcal{M}_b|$ to $|\mathcal{C}_b|$.
+    * If $b$ initiates a function call, merging is undesirable -- any uninlined function has multiple callsites.
