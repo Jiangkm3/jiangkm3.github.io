@@ -13,7 +13,4 @@ export default defineConfig({
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
   },
-  image: {
-    service: passthroughImageService(),
-  },
 });
