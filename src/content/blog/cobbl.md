@@ -39,3 +39,4 @@ To tackle the above issues, we present a new block-based SNARK system, CoBBl (**
 This is, in fact, a very straightforward process. Since a basic block cannot contain any control flow within it, CoBBl processes the program linearly, and whenever it encounters a branching statement, a loop, or a function call, it initializes a new block.
 
 #### Minimize the size and number of blocks
+Blindly dividing a program into blocks based on control flow might not be the most efficient way to constraint generation.
